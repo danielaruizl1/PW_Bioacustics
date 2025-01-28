@@ -45,9 +45,9 @@ The proposed JSON format contains the following sections:
 }  
 ```
 As evidenced in the example above, our format consists of three main parts: 
-- info: General information about the dataset
-- sounds: List of sound files in the dataset
-- annotations: List of annotations for the sound files 
+- `info`: General information about the dataset
+- `sounds`: List of sound files in the dataset
+- `annotations`: List of annotations for the sound files 
   
 Now, let's take a detailed look at the information that comprises these sections.
 
