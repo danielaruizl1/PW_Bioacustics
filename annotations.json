@@ -1,0 +1,36 @@
+{
+    "info": {
+        "year": 2025,
+        "version": "1.0",
+        "description": "This is a brief summary of the dataset",
+        "contributor": "Organization Name",
+        "url": "https://example.com",
+        "date_created": "2025-01-01",
+        "license": "CC BY 4.0"
+    },
+    "sounds": [
+        {
+            "id": 1,
+            "file_name": "recording1.wav",
+            "duration": 120.5,
+            "sample_rate": 48000,
+            "latitude": 10.11,
+            "longitude": -84.52,
+            "date_recorded": "2023-09-15"
+        }
+    ],
+    "annotations": [
+        {
+            "anno_id": 1,
+            "sound_id": 0,
+            "category_id": 3,
+            "category": "birds",
+            "supercategory": "animal",
+            "t_min": 0.0,
+            "t_max": 10.0,
+            "f_min": 300.0,
+            "f_max": 8000.0,
+            "ischorus": false
+        }
+    ]
+}

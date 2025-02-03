@@ -22,7 +22,7 @@ The proposed JSON format contains the following sections:
       "id": 1,  
       "file_name": "recording1.wav",  
       "duration": 120.5,  
-      "sample_rate": 48,  
+      "sample_rate": 48000,  
       "latitude": 10.11,  
       "longitude": -84.52,  
       "date_recorded": "2023-09-15"  
@@ -60,7 +60,7 @@ Now, let's take a detailed look at the information that comprises these sections
 | `description`  | A brief summary of the dataset. <br><br> **Constraints** <br>• required: `false` | `str`      |  
 | `contributor`  | The name of the individual or organization that contributed the data. <br><br> **Constraints** <br>• required: `false` | `str`      |  
 | `url`          | The web address where the dataset can be accessed or downloaded. <br><br> **Constraints** <br>• required: `false` | `str`      |  
-| `date_created` | The date and time when the bioacoustic data set was created. <br><br> **Constraints** <br>• required: `false` | `datetime` | 
+| `date_created` | The datetime when the bioacoustic dataset was created in YYYY-MM-DD format. <br><br> **Constraints** <br>• required: `false` | `datetime` | 
 | `license`         | The name of the license that specifies the permissions and restrictions for using the bioacoustic dataset. <br><br> **Constraints** <br>• required: `true` <br><br> **Example:** `CC BY 4.0` <br><br> | `str`      |  
 
 ## Sounds 
@@ -70,10 +70,10 @@ Now, let's take a detailed look at the information that comprises these sections
 | `id`           | A unique identifier for a specific sound within the dataset. <br><br> **Constraints** <br>• required: `true` <br><br> **Example:** `1`| `int`      |  
 | `file_name`    | The name of the audio file containing the bioacoustic recording. <br><br> **Constraints** <br>• required: `true` <br><br> **Example:** `recording1.wav` | `str`      |  
 | `duration`     | The length of the audio recording in seconds. <br><br> **Constraints** <br>• required: `true` <br><br> **Example:** `120.5`| `float`      |  
-| `sample_rate`  | The number of samples of audio carried per second, measured in kHz. <br><br> **Constraints** <br>• required: `true` <br><br> **Example:** `48`| `int`      |  
+| `sample_rate`  | The number of samples of audio carried per second, measured in Hz. <br><br> **Constraints** <br>• required: `true` <br><br> **Example:** `48000`| `int`      |  
 | `latitude`     | The geographical latitude where the bioacoustic recording was taken. <br><br> **Constraints** <br>• required: `true` <br><br> **Example:** `10.11` | `float`    |  
 | `longitude`    | The geographical longitude where the bioacoustic recording was taken. <br><br> **Constraints** <br>• required: `true` <br><br> **Example:** `-84.52` | `float`    |  
-| `date_recorded`| The date and time when the audio was recorded. <br><br> **Constraints** <br>• required: `false` | `datetime`    |  
+| `date_recorded`| The datetime when the audio was recoded in YYYY-MM-DD format. <br><br> **Constraints** <br>• required: `false` | `datetime`    |  
 
 
 ## Annotations 
