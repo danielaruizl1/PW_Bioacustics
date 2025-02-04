@@ -1,7 +1,6 @@
 #%%
 from coco_standard_format import AnnotationCreator
 from datetime import datetime
-import soundfile as sf 
 import pandas as pd
 import csv
 import os
@@ -25,10 +24,7 @@ flac_files = [f for f in os.listdir(sound_files_path) if f.endswith('.flac')]
    
 for i, file_name in enumerate(flac_files):   
     file_path = os.path.join(sound_files_path, file_name)   
-    
-    with sf.SoundFile(file_path) as sound_file:  
-        duration = len(sound_file) / sound_file.samplerate  
-        sample_rate = sound_file.samplerate 
+    duration, sample_rate = annotation_creator._get_duration_and_sample_rate(file_path)
     
     if "S01" in file_name:
         latitude = 5.59   
@@ -63,7 +59,7 @@ with open(annotation_file, mode='r') as file:
                 sound_id = sound["id"]
                 break
 
-        category_id = int(categories_df[categories_df['Species eBird Code'] == category].index[0])
+        category_id = [cat for cat in annotation_creator.data["categories"] if cat["Species eBird Code"] == category][0]["id"]
         anno_id = csv_reader.line_num - 2  
   
         annotation_creator.add_annotation(anno_id, sound_id, category_id, category, t_min, t_max, f_min=f_min, f_max=f_max)  

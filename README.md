@@ -74,7 +74,7 @@ Now, let's take a detailed look at the information that comprises these sections
   
 | Name           | Definition                                                                                     | Type   |  
 |----------------|------------------------------------------------------------------------------------------------|--------|
-| `id`           | A unique identifier for a category within the dataset. <br><br> **Constraints** <br>• required: `true` <br><br> **Example:** `0`|
+| `id`           | A unique identifier for a category within the dataset. <br><br> **Constraints** <br>• required: `true` <br><br> **Example:** `0`| `int`      |
 | `name`    | The name of the category of sounds, such as a particular species or type of call. <br><br> **Constraints** <br>• required: `true` <br><br> **Example:** `Melanerpes formicivorus` | `str`      |  
 
 This section is built from a DataFrame that must include at least the category names and their identifiers. However, it can also contain other relevant category information, such as eBird Codes, Common Names, etc.
