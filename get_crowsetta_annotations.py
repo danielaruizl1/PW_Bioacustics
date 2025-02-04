@@ -67,17 +67,19 @@ def get_annotations(annotations_path, format, annot_col=None, annot_ext="txt"):
     
     return annots
 
-# Example with Colombia_Costa_Rica_Birds
-custom_annotations_path = split_csv_by_filename(os.path.join(".","data","Colombia_Costa_Rica_Birds","annotations.csv"))
-custom_annotations = get_annotations(custom_annotations_path, "csv_bbox", annot_ext="csv")
-print(custom_annotations[0])
+if __name__ == "__main__":
+    
+    # Example with Colombia_Costa_Rica_Birds
+    custom_annotations_path = split_csv_by_filename(os.path.join(".","data","Colombia_Costa_Rica_Birds","annotations.csv"))
+    custom_annotations = get_annotations(custom_annotations_path, "csv_bbox", annot_ext="csv")
+    print(custom_annotations[0])
 
-# Example with Enabirds dataset
-raven_annotations_path = os.path.join(".","data","Enabirds","annotation_Files","Recording_2")
-raven_annotations = get_annotations(raven_annotations_path, "raven", annot_col="Species")
-print(raven_annotations[0])
+    # Example with Enabirds dataset
+    raven_annotations_path = os.path.join(".","data","Enabirds","annotation_Files","Recording_2")
+    raven_annotations = get_annotations(raven_annotations_path, "raven", annot_col="Species")
+    print(raven_annotations[0])
 
-# Example with Domestic Canari dataset
-audacity_annotations_path = os.path.join(".","data","Domestic_Canari","M1-2016-spring_audacity_annotations","audacity-annotations")
-audacity_annotations = get_annotations(audacity_annotations_path, "aud-seq")
-print(audacity_annotations[0])
+    # Example with Domestic Canari dataset
+    audacity_annotations_path = os.path.join(".","data","Domestic_Canari","M1-2016-spring_audacity_annotations","audacity-annotations")
+    audacity_annotations = get_annotations(audacity_annotations_path, "aud-seq")
+    print(audacity_annotations[0])

@@ -1,30 +1,36 @@
 {
     "info": {
         "year": 2025,
-        "version": "1.0",
+        "version": 1.0,
         "description": "This is a brief summary of the dataset",
         "contributor": "Organization Name",
         "url": "https://example.com",
-        "date_created": "2025-01-01",
+        "date_created": "20250101",
         "license": "CC BY 4.0"
     },
+    "categories": [
+        {
+            "id": 0,
+            "Name": "Melanerpes formicivorus"
+        }
+    ],
     "sounds": [
         {
-            "id": 1,
+            "id": 0,
             "file_name": "recording1.wav",
             "duration": 120.5,
             "sample_rate": 48000,
             "latitude": 10.11,
             "longitude": -84.52,
-            "date_recorded": "2023-09-15"
+            "date_recorded": "20230915"
         }
     ],
     "annotations": [
         {
-            "anno_id": 1,
+            "anno_id": 0,
             "sound_id": 0,
-            "category_id": 3,
-            "category": "birds",
+            "category_id": 0,
+            "category": "Melanerpes formicivorus",
             "supercategory": "animal",
             "t_min": 0.0,
             "t_max": 10.0,

@@ -1,5 +1,6 @@
 from datetime import datetime  
 from typing import Optional
+import pandas as pd
 import json  
   
 class AnnotationCreator:  
@@ -15,12 +16,13 @@ class AnnotationCreator:
         Initializes the AnnotationCreator with an empty dataset.  
         """
         self.data = {  
-            "info": {},  
+            "info": {},
+            "categories": [],  
             "sounds": [],  
             "annotations": []  
         }  
 
-    def _validate_date_format(self, date_str: str, date_format: str = "%Y-%m-%d"):  
+    def _validate_date_format(self, date_str: str, date_format: str = "%Y%m%d"):  
         """  
         Validates if the date string matches the given format and is not a future date.  
   
@@ -67,6 +69,19 @@ class AnnotationCreator:
         self.data["info"]["url"] = url
         self.data["info"]["date_created"] = date_created
         self.data["info"]["license"] = license  
+    
+    def add_categories(self, categories_df:pd.DataFrame):
+        """  
+        Adds the categories ids and names to the dataset.  
+  
+        Args:  
+            categories (DataFrame): A pandas DataFrame containing the category information.  
+        """  
+        for index, row in categories_df.iterrows():  
+            df = categories_df.reset_index().rename(columns={'index': 'id'})  
+            categories_list = df.to_dict(orient='records') 
+
+        self.data['categories'] = categories_list
         
     def add_sound(self, id:int, file_name:str, duration:int, sample_rate:int, latitude:float, longitude:float, date_recorded:Optional[datetime]=None):  
         """  
@@ -131,15 +146,15 @@ class AnnotationCreator:
         
         if t_min < 0:  
             raise ValueError("t_min must be a positive value.")  
-        if t_max <= 0:  
+        if t_max < 0:  
             raise ValueError("t_max must be a positive value.")
         if t_max < t_min:
             raise ValueError("t_max must be greater than t_min.")
-        if t_max > sound_dict["duration"]:
+        if t_max > round(sound_dict["duration"],1):
             raise ValueError("t_max must be less than the duration of the sound.")
         if f_min < 0:
             raise ValueError("f_min must be a positive value.")
-        if f_max <= 0:
+        if f_max < 0:
             raise ValueError("f_max must be a positive value.")
         if f_max < f_min:
             raise ValueError("f_max must be greater than f_min.")
@@ -169,35 +184,40 @@ class AnnotationCreator:
         """
         with open(filename, 'w') as f:  
             json.dump(self.data, f, indent=4)  
+
+if __name__ == "__main__":
+
+    # Example of how to use the AnnotationCreator class and its methods
   
-# Example usage:  
-creator = AnnotationCreator()  
+    creator = AnnotationCreator()  
 
-creator.add_info(year=2025, 
-                version="1.0", 
-                description="This is a brief summary of the dataset", 
-                contributor="Organization Name", 
-                url="https://example.com", 
-                date_created="2025-01-01",
-                license="CC BY 4.0",)
+    creator.add_info(year=2025, 
+                    version=1.0, 
+                    description="This is a brief summary of the dataset", 
+                    contributor="Organization Name", 
+                    url="https://example.com", 
+                    date_created="20250101",
+                    license="CC BY 4.0",)
+    
+    creator.add_categories(pd.DataFrame([{'name': 'Melanerpes formicivorus'}]))
 
-creator.add_sound(id=1, 
-                file_name="recording1.wav",
-                duration=120.5,
-                sample_rate=48000,
-                latitude=10.11,
-                longitude=-84.52,
-                date_recorded="2023-09-15")
+    creator.add_sound(id=0, 
+                    file_name="recording1.wav",
+                    duration=120.5,
+                    sample_rate=48000,
+                    latitude=10.11,
+                    longitude=-84.52,
+                    date_recorded="20230915")
 
-creator.add_annotation(anno_id=1,
-                    sound_id=0,
-                    category_id=3,
-                    category="birds",
-                    supercategory="animal",
-                    t_min=0.0,
-                    t_max=10.0,
-                    f_min=300.0,
-                    f_max=8000.0,
-                    ischorus=False)
+    creator.add_annotation(anno_id=0,
+                        sound_id=0,
+                        category_id=0,
+                        category="Melanerpes formicivorus",
+                        supercategory="animal",
+                        t_min=0.0,
+                        t_max=10.0,
+                        f_min=300.0,
+                        f_max=8000.0,
+                        ischorus=False)
 
-creator.save_to_file("annotations.json")  
+    creator.save_to_file("annotations.json")  
