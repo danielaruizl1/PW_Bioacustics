@@ -312,4 +312,4 @@ if __name__ == "__main__":
                         f_max=8000.0,
                         ischorus=False)
 
-    creator.save_to_file("annotations.json")  
+    creator.save_to_file("coco_annotations_example.json")  

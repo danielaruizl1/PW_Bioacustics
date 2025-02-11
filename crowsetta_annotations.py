@@ -76,7 +76,7 @@ if __name__ == "__main__":
     audacity_annotations = get_annotations(audacity_annotations_path, "aud-seq", sounds_path=audacity_sounds_path)
     creator_audacity = AnnotationCreator()
     creator_audacity.convert_crowsetta_seq_annotations(audacity_annotations)
-    creator_audacity.save_to_file("audacity_annotations_from_crowsetta.json")
+    creator_audacity.save_to_file(os.path.join(".","annotations_results","audacity_annotations_from_crowsetta.json"))
 
     # Example with Enabirds dataset
     raven_annotations_path = os.path.join(".","data","Enabirds","annotation_Files","Recording_3")
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     raven_annotations = get_annotations(raven_annotations_path, "raven", annot_col="Species", sounds_path=raven_sounds_path)
     creator_raven = AnnotationCreator()
     creator_raven.convert_crowsetta_bbox_annotations(raven_annotations)
-    creator_raven.save_to_file("raven_annotations_from_crowsetta.json")
+    creator_raven.save_to_file(os.path.join(".","annotations_results","raven_annotations_from_crowsetta.json"))
 
     # Example with Colombia_Costa_Rica_Birds
     custom_annotations_path = split_csv_by_filename(os.path.join(".","data","Colombia_Costa_Rica_Birds","annotations.csv"))
@@ -92,7 +92,7 @@ if __name__ == "__main__":
     custom_annotations = get_annotations(custom_annotations_path, "csv_bbox", sounds_path=custom_sounds_path, annot_ext="csv", sounds_ext="flac")
     creator_custom = AnnotationCreator() 
     creator_custom.convert_crowsetta_bbox_annotations(custom_annotations)
-    creator_custom.save_to_file("custom_annotations_from_crowsetta.json")
+    creator_custom.save_to_file(os.path.join(".","annotations_results","custom_annotations_from_crowsetta.json"))
 
     
     

@@ -65,4 +65,4 @@ with open(annotation_file, mode='r') as file:
         annotation_creator.add_annotation(anno_id, sound_id, category_id, category, t_min, t_max, f_min=f_min, f_max=f_max)  
 
 #%% Save the dataset to a JSON file
-annotation_creator.save_to_file(os.path.join(".","data","Colombia_Costa_Rica_Birds","coco_annotations.json"))
+annotation_creator.save_to_file(os.path.join(".","annotations_results", "Colombia_Costa_Rica_Birds_coco_annotations.json"))
