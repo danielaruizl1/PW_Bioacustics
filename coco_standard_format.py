@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Optional
 import soundfile as sf 
 import pandas as pd
+import requests
 import json  
 import os
   
@@ -59,35 +60,50 @@ class AnnotationCreator:
             sample_rate = sound_file.samplerate 
         return duration, sample_rate
 
-    def add_info(self, license:str, year:Optional[int]=None, version:Optional[float]=None, description:Optional[str]=None, contributor:Optional[str]=None, url:Optional[str]=None, date_created:Optional[datetime]=None):
+    def add_info(self, title:Optional[str]=None,  license:Optional[str]=None, publication_date:Optional[datetime]=None, description:Optional[str]=None, creators:Optional[list]=None, version:Optional[float]=None, url:Optional[str]=None):
         """  
         Adds the general information about the dataset.  
   
         Args:  
-            license (str): The name of the license that specifies the permissions and restrictions for using the bioacoustic dataset.  
-            year (Optional[int]): The year when the dataset was released.  
-            version (Optional[float]): The version number of the dataset.  
+            title (Optional[str]): The title of the bioacoustic dataset.
+            license (Optional[str]): The name of the license that specifies the permissions and restrictions for using the bioacoustic dataset. 
+            publication_date (Optional[datetime]): The date when the bioacoustic dataset was published in YYYY-MM-DD format.  
             description (Optional[str]): A brief summary of the dataset.  
-            contributor (Optional[str]): The name of the individual or organization that contributed the data.  
-            url (Optional[str]): The web address where the dataset can be accessed or downloaded.  
-            date_created (Optional[str]): The datetime when the bioacoustic dataset was created in YYYY-MM-DD format.  
+            creators (Optional[dict]): List with creators information.  
+            version (Optional[float]): The version number of the dataset.   
+            url (Optional[str]): The web address where the dataset can be accessed or downloaded. If it's a Zenodo URL, metadata is fetched automatically.
   
         Raises:  
             ValueError: If the year is in the future or the date format is incorrect.  
         """  
-        if year > int(datetime.now().year):  
-            raise ValueError("Year must be the current or a previous one.") 
-        if date_created:
-            self._validate_date_format(date_created)
 
-        self.data["info"]["year"] = year
-        self.data["info"]["version"] = version
+        if "zenodo.org/records/" in url:
+            try:
+                record_id = url.split("zenodo.org/records/")[1]
+                response = requests.get(f"https://zenodo.org/api/records/{record_id}")
+                data = response.json()
+                metadata = data['metadata']
+                title=metadata['title']
+                license=metadata['license']['id']
+                publication_date=datetime.strptime(metadata['publication_date'], "%Y-%m-%d").strftime("%Y%m%d")
+                description=metadata['description']
+                creators=metadata['creators']
+                version=metadata['version']
+
+            except requests.exceptions.RequestException as e:
+                raise ValueError(f"Failed to fetch metadata from Zenodo: {e}")
+
+        if publication_date:
+            self._validate_date_format(publication_date)
+
+        self.data["info"]["title"] = title
+        self.data["info"]["license"] = license 
+        self.data["info"]["publication_date"] = publication_date
         self.data["info"]["description"] = description
-        self.data["info"]["contributor"] = contributor
+        self.data["info"]["creators"] = creators
+        self.data["info"]["version"] = version 
         self.data["info"]["url"] = url
-        self.data["info"]["date_created"] = date_created
-        self.data["info"]["license"] = license  
-    
+
     def add_categories(self, categories_df:pd.DataFrame):
         """  
         Adds the categories ids and names to the dataset.  

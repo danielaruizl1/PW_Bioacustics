@@ -76,16 +76,26 @@ def download_and_unzip(url, extract_to='data'):
   
 # Dictionary of datasets, where keys are the dataset names and values are lists of URLs (some datasets may have multiple parts)
 datasets = {  
-    "Domestic_Canari": ["https://zenodo.org/api/records/6521932/files-archive"],  
+    "BirdVox-DCASE-20k": ["https://zenodo.org/api/records/1208080/files-archive"],
+    "Beehive": ["https://zenodo.org/api/records/2667806/files-archive"],
+    "Chiffchaff_LittleOwl_TreePipit": ["https://zenodo.org/api/records/1413495/files-archive"],
     "Colombia_Costa_Rica_Birds": ["https://zenodo.org/api/records/7525349/files-archive"],
+    "Domestic_Canari": ["https://zenodo.org/api/records/6521932/files-archive"],  
+    "DV3V": ["https://zenodo.org/api/records/11544734/files-archive"],
+    "HumBugDB": ["https://zenodo.org/api/records/4904800/files-archive"],
+    "North_American_Bird_Species": ["https://zenodo.org/api/records/1250690/files-archive"],  
+    "Southwestern_Amazon_Basin_Soundscape": ["https://zenodo.org/api/records/7079124/files-archive"]
 }  
   
-# Base directory for all datasets  
-base_dir = 'data'  
-  
-# Download and unzip each dataset  
-for dataset_name, dataset_urls in datasets.items():
-    dataset_dir = os.path.join(base_dir, dataset_name)  
-    for url in dataset_urls:  
-        download_and_unzip(url, extract_to=dataset_dir)  
-        
+def main():
+    parser = argparse.ArgumentParser(description="Download and extract datasets.")
+    parser.add_argument("--dataset", choices=datasets.keys(), help="Name of the dataset to download.")
+    args = parser.parse_args()
+    
+    dataset_name = args.dataset
+    dataset_dir = os.path.join('data', dataset_name)
+    for url in datasets[dataset_name]:
+        download_and_unzip(url, extract_to=dataset_dir)
+
+if __name__ == "__main__":
+    main()
