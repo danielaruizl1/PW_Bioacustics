@@ -60,13 +60,13 @@ class AnnotationCreator:
             sample_rate = sound_file.samplerate 
         return duration, sample_rate
 
-    def add_info(self, title:Optional[str]=None,  license:Optional[str]=None, publication_date:Optional[datetime]=None, description:Optional[str]=None, creators:Optional[list]=None, version:Optional[float]=None, url:Optional[str]=None):
+    def add_info(self, title:str=None,  license:str=None, publication_date:Optional[datetime]=None, description:Optional[str]=None, creators:Optional[list]=None, version:Optional[float]=None, url:Optional[str]=None):
         """  
         Adds the general information about the dataset.  
   
         Args:  
-            title (Optional[str]): The title of the bioacoustic dataset.
-            license (Optional[str]): The name of the license that specifies the permissions and restrictions for using the bioacoustic dataset. 
+            title (str): The title of the bioacoustic dataset.
+            license (str): The name of the license that specifies the permissions and restrictions for using the bioacoustic dataset. 
             publication_date (Optional[datetime]): The date when the bioacoustic dataset was published in YYYY-MM-DD format.  
             description (Optional[str]): A brief summary of the dataset.  
             creators (Optional[dict]): List with creators information.  
@@ -76,7 +76,7 @@ class AnnotationCreator:
         Raises:  
             ValueError: If the year is in the future or the date format is incorrect.  
         """  
-
+        #TODO: Check if set title and license as required values
         if "zenodo.org/records/" in url:
             try:
                 record_id = url.split("zenodo.org/records/")[1]
@@ -117,13 +117,13 @@ class AnnotationCreator:
         categories_list = sorted_df.reset_index().to_dict(orient='records') 
         self.data['categories'] = categories_list
         
-    def add_sound(self, id:int, file_name:str, duration:int, sample_rate:int, latitude:float, longitude:float, date_recorded:Optional[datetime]=None):  
+    def add_sound(self, id:int, file_name_path:str, duration:int, sample_rate:int, latitude:float, longitude:float, date_recorded:Optional[datetime]=None):  
         """  
         Adds a sound entry to the dataset.  
   
         Args:  
             id (int): A unique identifier for a specific sound within the dataset.  
-            file_name (str): The name of the audio file containing the bioacoustic recording.  
+            file_name_path (str): The path of the audio file containing the bioacoustic recording.  
             duration (float): The length of the audio recording in seconds.  
             sample_rate (int): The number of samples of audio carried per second, measured in Hz.  
             latitude (float): The geographical latitude where the bioacoustic recording was taken.  
@@ -149,7 +149,7 @@ class AnnotationCreator:
 
         sound = {  
             "id": id,  
-            "file_name": file_name,  
+            "file_name_path": file_name_path,  
             "duration": duration,  
             "sample_rate": sample_rate,  
             "latitude": latitude,  
@@ -158,7 +158,7 @@ class AnnotationCreator:
         }  
         self.data['sounds'].append(sound)  
   
-    def add_annotation(self, anno_id:int, sound_id:int, category_id:int, category:str, t_min:float, t_max:float, supercategory:Optional[str]=None, f_min:Optional[float]=None, f_max:Optional[float]=None, ischorus:Optional[bool]=None):  
+    def add_annotation(self, anno_id:int, sound_id:int, category_id:int, category:str, t_min:float, t_max:float, supercategory:Optional[str]=None, f_min:Optional[float]=None, f_max:Optional[float]=None, ismultilabel:Optional[bool]=None):  
         """  
         Adds an annotation entry to the dataset.  
     
@@ -172,7 +172,7 @@ class AnnotationCreator:
             supercategory (Optional[str]): A higher-level grouping that the category belongs to.  
             f_min (Optional[float]): The lowest frequency of the annotated sound within the recording, in Hz.  
             f_max (Optional[float]): The highest frequency of the annotated sound within the recording, in Hz  
-            ischorus (Optional[bool]): A boolean indicating whether the sound is a chorus or not.  
+            ismultilabel (Optional[bool]): A boolean indicating whether the sound is labeled with multiple classes simultaneously.  
     
         Raises:  
             ValueError: If any of the provided values are out of valid range, or if the   
@@ -208,7 +208,7 @@ class AnnotationCreator:
             "t_max": t_max,  
             "f_min": f_min,  
             "f_max": f_max,  
-            "ischorus": ischorus  
+            "ismultilabel": ismultilabel 
         }  
         self.data['annotations'].append(annotation)  
 
@@ -232,7 +232,7 @@ class AnnotationCreator:
         for sound_id, annotation in enumerate(crowsetta_annotations):
             duration, sample_rate = self._get_duration_and_sample_rate(annotation.notated_path)
             self.add_sound(id=sound_id, 
-                           file_name=annotation.notated_path.name, 
+                           file_name_path=annotation.notated_path.name, 
                            duration=duration, 
                            sample_rate=sample_rate,
                            latitude=None,
@@ -269,7 +269,7 @@ class AnnotationCreator:
         for sound_id, annotation in enumerate(crowsetta_annotations):
             duration, sample_rate = self._get_duration_and_sample_rate(annotation.notated_path)
             self.add_sound(id=sound_id, 
-                           file_name=annotation.notated_path.name, 
+                           file_name_path=annotation.notated_path.name, 
                            duration=duration, 
                            sample_rate=sample_rate,
                            latitude=None,
@@ -299,18 +299,19 @@ if __name__ == "__main__":
     # Example of how to use the AnnotationCreator class and its methods
     creator = AnnotationCreator()  
 
-    creator.add_info(year=2025, 
-                    version=1.0, 
+    creator.add_info(title="Dataset Title",
+                    license="CC BY 4.0",
+                    publication_date="20250101",
                     description="This is a brief summary of the dataset", 
-                    contributor="Organization Name", 
-                    url="https://example.com", 
-                    date_created="20250101",
-                    license="CC BY 4.0",)
+                    creators=[{"name": "John Doe", "affiliation": "Organization Name"}],
+                    version=1.0,
+                    url="https://example.com"
+                    )
     
     creator.add_categories(pd.DataFrame([{'name': 'Melanerpes formicivorus'}]))
 
     creator.add_sound(id=0, 
-                    file_name="recording1.wav",
+                    file_name_path="datasets/audios/recording1.wav",
                     duration=120.5,
                     sample_rate=48000,
                     latitude=10.11,
@@ -326,6 +327,6 @@ if __name__ == "__main__":
                         t_max=10.0,
                         f_min=300.0,
                         f_max=8000.0,
-                        ischorus=False)
+                        ismultilabel=False)
 
     creator.save_to_file("coco_annotations_example.json")  

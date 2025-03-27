@@ -1,23 +1,28 @@
 {
     "info": {
-        "year": 2025,
-        "version": 1.0,
+        "title": "Dataset Title",
+        "license": "CC BY 4.0",
+        "publication_date": "20250101",
         "description": "This is a brief summary of the dataset",
-        "contributor": "Organization Name",
-        "url": "https://example.com",
-        "date_created": "20250101",
-        "license": "CC BY 4.0"
+        "creators": [
+            {
+                "name": "John Doe",
+                "affiliation": "Organization Name"
+            }
+        ],
+        "version": 1.0,
+        "url": "https://example.com"
     },
     "categories": [
         {
             "id": 0,
-            "Name": "Melanerpes formicivorus"
+            "name": "Melanerpes formicivorus"
         }
     ],
     "sounds": [
         {
             "id": 0,
-            "file_name": "recording1.wav",
+            "file_name_path": "datasets/audios/recording1.wav",
             "duration": 120.5,
             "sample_rate": 48000,
             "latitude": 10.11,
@@ -36,7 +41,7 @@
             "t_max": 10.0,
             "f_min": 300.0,
             "f_max": 8000.0,
-            "ischorus": false
+            "ismultilabel": false
         }
     ]
 }
