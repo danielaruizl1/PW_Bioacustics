@@ -135,11 +135,11 @@ class BaseReader:
             
             audio_path = os.path.join(self.data_path, sound['file_name_path'])
             y, sr = librosa.load(audio_path, sr=sound['sample_rate'])
-
+            
             t_min_global = min(anno['t_min'] for anno in relevant_annotations)
             t_max_global = max(anno['t_max'] for anno in relevant_annotations)
             # Añadir un margen para mejor visualización (5 segundos antes y después)
-            margin = 5
+            margin = 1
             t_min_display = max(0, t_min_global - margin)
             t_max_display = min(len(y) / sr, t_max_global + margin)
             
@@ -183,9 +183,10 @@ class BaseReader:
 
             # Personalizar el formato del eje X para mostrar minutos:segundos
             def format_time(x, pos=None):
-                minutes = int(x // 60)
-                seconds = int(x % 60)
-                return f"{minutes}:{seconds:02d}"
+                #minutes = int(x // 60)
+                #seconds = int(x % 60)
+                seconds = float(x)
+                return f"{seconds}"
             
             ax = plt.gca()
             ax.xaxis.set_major_formatter(ticker.FuncFormatter(format_time))
@@ -226,7 +227,7 @@ class BaseReader:
                 
             # Configurar ejes y títulos
             plt.colorbar(img, format='%+2.0f dB')
-            plt.title(f"Spectrogram of {os.path.basename(sound['file_name_path'])} (5 Annotations examples)", fontsize=14)
+            plt.title(f"Spectrogram of {os.path.basename(sound['file_name_path'])}", fontsize=14)
             plt.xlabel('Time (s)', fontsize=12)
             plt.ylabel('Frecuency (Hz)', fontsize=12)
             

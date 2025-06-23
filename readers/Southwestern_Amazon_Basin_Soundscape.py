@@ -35,25 +35,24 @@ class SouthwesternAmazonBasinSoundscape(BaseReader):
 
     def add_categories(self):
         categories_df = pd.read_csv(self.species_file)
-        # Ensure "name" column exists; if not, use the first column
-        if "name" not in categories_df.columns:
-            categories_df.rename(columns={categories_df.columns[0]: "name"}, inplace=True)
+        categories_df.rename(columns={"Scientific Name": "name"}, inplace=True)
         self.annotation_creator.add_categories(categories_df)
 
     def add_annotations(self):
         with open(self.annotation_file, mode='r') as file:
             csv_reader = csv.DictReader(file)
             for row in csv_reader:
-                filename, t_min, t_max, f_min, f_max, category = row['Filename'], float(row['Start Time (s)']), float(row['End Time (s)']), float(row['Low Freq (Hz)']), float(row['High Freq (Hz)']), row['Species eBird Code']
+                filename, t_min, t_max, f_min, f_max, ebirdcode = row['Filename'], float(row['Start Time (s)']), float(row['End Time (s)']), float(row['Low Freq (Hz)']), float(row['High Freq (Hz)']), row['Species eBird Code']
 
                 sound_id = next((s["id"] for s in self.annotation_creator.data["sounds"] if filename in s["file_name_path"]), None)
                 if sound_id is None:
                     continue
 
-                category_match = [cat for cat in self.annotation_creator.data["categories"] if cat["name"] == category]
+                category_match = [cat for cat in self.annotation_creator.data["categories"] if cat["Species eBird Code"] == ebirdcode]
                 if not category_match:
                     continue
                 category_id = category_match[0]["id"]
+                category = category_match[0]["name"]
 
                 anno_id = csv_reader.line_num - 2
                 self.annotation_creator.add_annotation(

@@ -4,7 +4,7 @@ import requests
 import csv
 import os
 
-class ColombiaCostaRicaBirds(BaseReader):
+class WesternUnitedStatesSoundscapes(BaseReader):
     def __init__(self, data_path):
         super().__init__(data_path)
         self.sound_files_path = os.path.join(self.data_path, "soundscape_data")
@@ -12,16 +12,18 @@ class ColombiaCostaRicaBirds(BaseReader):
         self.species_file = os.path.join(self.data_path, "species.csv")
 
     def add_dataset_info(self):
-        self.annotation_creator.add_info(url="https://zenodo.org/records/7525349")
+        self.annotation_creator.add_info(url="https://zenodo.org/records/7050014")
 
     def add_sounds(self):
         flac_files = [f for f in os.listdir(self.sound_files_path) if f.endswith('.flac')]
+        latitude, longitude = (38.49,-119.95)
+
         for i, file_name in enumerate(flac_files):
+
             file_path = os.path.join(self.sound_files_path, file_name)
             duration, sample_rate = self.annotation_creator._get_duration_and_sample_rate(file_path)
 
-            latitude, longitude = (5.59, -75.85) if "S01" in file_name else (10.11, -84.52) if "S02" in file_name else (None, None)
-            date_recorded = file_name.split('_')[3]
+            date_recorded = file_name.split('_')[2]
 
             self.annotation_creator.add_sound(
                 id=i,
@@ -68,6 +70,6 @@ class ColombiaCostaRicaBirds(BaseReader):
                 )
 
 if __name__ == "__main__":
-    dataset_path = os.path.join("..","data", "Colombia_Costa_Rica_Birds")
-    reader = ColombiaCostaRicaBirds(dataset_path)
+    dataset_path = os.path.join("..","data", "Western_United_States_Soundscapes")
+    reader = WesternUnitedStatesSoundscapes(dataset_path)
     reader.process_dataset()

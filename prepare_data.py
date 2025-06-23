@@ -1,6 +1,7 @@
 from zipfile import ZipFile  
 from tqdm import tqdm  
 from io import BytesIO 
+import argparse
 import requests  
 import tempfile 
 import os  
@@ -53,7 +54,7 @@ def download_and_unzip(url, extract_to='data'):
                 return  
     
             print(f"Successfully downloaded from {url}")  
-    
+
             # Unzip the file into the directory with a progress bar  
             with ZipFile(temp_file_path) as zipfile:  
                 zip_info_list = zipfile.infolist()  
@@ -74,24 +75,32 @@ def download_and_unzip(url, extract_to='data'):
     else:  
         print(f"Failed to download from {url}, status code: {response.status_code}")  
   
-# Dictionary of datasets, where keys are the dataset names and values are lists of URLs (some datasets may have multiple parts)
-datasets = {  
-    "BirdVox-DCASE-20k": ["https://zenodo.org/api/records/1208080/files-archive"],
-    "Beehive": ["https://zenodo.org/api/records/2667806/files-archive"],
-    "Chiffchaff_LittleOwl_TreePipit": ["https://zenodo.org/api/records/1413495/files-archive"],
-    "Colombia_Costa_Rica_Birds": ["https://zenodo.org/api/records/7525349/files-archive"],
-    "Domestic_Canari": ["https://zenodo.org/api/records/6521932/files-archive"],  
-    "DV3V": ["https://zenodo.org/api/records/11544734/files-archive"],
-    "HumBugDB": ["https://zenodo.org/api/records/4904800/files-archive"],
-    "North_American_Bird_Species": ["https://zenodo.org/api/records/1250690/files-archive"],  
-    "Southwestern_Amazon_Basin_Soundscape": ["https://zenodo.org/api/records/7079124/files-archive"]
-}  
-  
 def main():
+
+    # Dictionary of datasets, where keys are the dataset names and values are lists of URLs (some datasets may have multiple parts)
+    datasets = {  
+        "BirdVox-DCASE-20k": ["https://zenodo.org/api/records/1208080/files-archive"],
+        "Beehive": ["https://zenodo.org/api/records/2667806/files-archive"],
+        "Chiffchaff_LittleOwl_TreePipit": ["https://zenodo.org/api/records/1413495/files-archive"],
+        "Colombia_Costa_Rica_Birds": ["https://zenodo.org/api/records/7525349/files-archive"],
+        "Domestic_Canari": ["https://zenodo.org/api/records/6521932/files-archive"],  
+        "DV3V": ["https://zenodo.org/api/records/11544734/files-archive"],
+        "HumBugDB": ["https://zenodo.org/api/records/4904800/files-archive"],
+        "North_American_Bird_Species": ["https://zenodo.org/api/records/1250690/files-archive"],  
+        "Southwestern_Amazon_Basin_Soundscape": ["https://zenodo.org/api/records/7079124/files-archive"],
+        "Pin-tailed_Whydah": ["https://zenodo.org/api/records/6330711/files-archive"], 
+        "Thyolo_Alethe": ["https://zenodo.org/api/records/6328244/files-archive"],
+        "Hawaii_Birds": ["https://zenodo.org/api/records/7078499/files-archive"],
+        "Northeastern_US_Soundscapes": ["https://zenodo.org/api/records/7079380/files-archive"],
+        "Southern_Sierra_Nevada_Birds": ["https://zenodo.org/api/records/7525805/files-archive"],
+        "WABAD": ["https://zenodo.org/api/records/14191524/files-archive"],
+        "Western_United_States_Soundscapes": ["https://zenodo.org/api/records/7050014/files-archive"],
+    }  
+
     parser = argparse.ArgumentParser(description="Download and extract datasets.")
     parser.add_argument("--dataset", choices=datasets.keys(), help="Name of the dataset to download.")
     args = parser.parse_args()
-    
+
     dataset_name = args.dataset
     dataset_dir = os.path.join('data', dataset_name)
     for url in datasets[dataset_name]:

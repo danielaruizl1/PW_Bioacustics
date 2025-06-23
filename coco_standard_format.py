@@ -36,7 +36,7 @@ class AnnotationCreator:
         Raises:  
             ValueError: If the date string does not match the format or is a future date.  
         """  
-        try:  
+        try:
             date_obj = datetime.strptime(date_str, date_format)  
         except ValueError:  
             raise ValueError(f"Date '{date_str}' is not in the correct format. Expected format: {date_format}")  
@@ -88,7 +88,10 @@ class AnnotationCreator:
                 publication_date=datetime.strptime(metadata['publication_date'], "%Y-%m-%d").strftime("%Y%m%d")
                 description=metadata['description']
                 creators=metadata['creators']
-                version=metadata['version']
+                if 'version' in metadata:
+                    version=metadata['version']
+                else:
+                    version=metadata['relations']['version']
 
             except requests.exceptions.RequestException as e:
                 raise ValueError(f"Failed to fetch metadata from Zenodo: {e}")
@@ -186,8 +189,8 @@ class AnnotationCreator:
             raise ValueError("t_max must be a positive value.")
         if t_max < t_min:
             raise ValueError("t_max must be greater than t_min.")
-        if t_max > round(sound_dict["duration"],1):
-            raise ValueError("t_max must be less than the duration of the sound.")
+        if t_max > round(sound_dict["duration"], 1):
+            return "t_max must be less than the duration of the sound, skipping annotation."
         if f_min and f_max:
             if f_min < 0:
                 raise ValueError("f_min must be a positive value.")
